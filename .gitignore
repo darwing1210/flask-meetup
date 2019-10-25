@@ -13,5 +13,8 @@ venv/
 .env
 .flaskenv
 
+# sqlite
+app.db
+
 # other
 presentation_notes.txt
