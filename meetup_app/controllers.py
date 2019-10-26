@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from flask import current_app as app
 from flask import Blueprint, escape, request, render_template, jsonify, abort
 
 urls = Blueprint('urls', __name__)
@@ -36,7 +35,7 @@ def listar_eventos():
 @urls.route('/eventos', methods=['POST'])
 def crear_evento():
     # Content-Type: application/json
-    evento = request.json.get('evento', [])
+    evento = request.json.get('evento', {})
     eventos.append(evento)
 
     return jsonify(evento)
@@ -60,7 +59,7 @@ def actualizar_evento(id_evento):
     if indice is None:
         return abort(404)
     
-    eventos[indice] = request.json.get('evento', [])
+    eventos[indice] = request.json.get('evento', {})
     return jsonify(eventos[indice])
 
 @urls.route('/eventos/<int:id_evento>', methods=['DELETE'])

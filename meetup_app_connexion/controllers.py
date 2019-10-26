@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from flask import current_app as app
 from flask import Blueprint, escape, request, render_template, jsonify, abort, g
 from dateutil import parser as dateparser
 
