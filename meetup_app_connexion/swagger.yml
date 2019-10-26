@@ -1,0 +1,241 @@
+swagger: "2.0"
+info:
+  description: Este es el archivo swagger que va con nuestra API
+  version: "1.0.0"
+  title: Flask Meetup
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+host: "127.0.0.1:5000"
+basePath: "/v2"
+tags:
+- name: "eventos"
+  description: "Todos los paths de eventos"
+- name: "usuarios"
+  description: "Todos los paths de usuarios"
+schemes:
+- "http"
+- "https"
+definitions:
+  Usuario:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      nombre:
+        type: "string"
+      apellido:
+        type: "string"
+      email:
+        type: "string"
+        format: "email"
+      rol:
+        type: "string"
+        description: "rol del usuario"
+        enum:
+        - "autor"
+        - "organizador"
+        - "miembro"
+      lugar:
+        type: "string"
+  PeticionUsuario:
+    type: "object"
+    properties:
+      nombre:
+        type: "string"
+      apellido:
+        type: "string"
+      email:
+        type: "string"
+        format: "email"
+      rol:
+        type: "string"
+        description: "rol del usuario"
+        enum:
+        - "autor"
+        - "organizador"
+        - "miembro"
+      lugar:
+        type: "string"
+      password:
+        type: "string"
+        format: "password"
+  Evento:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      nombre:
+        type: "string"
+      fecha:
+        type: "string"
+        format: "date-time"
+      description:
+        type: "string"
+      lugar:
+        type: "string"
+      asistentes:
+        type: "array"
+        items:
+          $ref: "#/definitions/Usuario"
+  PeticionEvento:
+    type: "object"
+    properties:
+      nombre:
+        type: "string"
+      fecha:
+        type: "string"
+        format: "date-time"
+      description:
+        type: "string"
+      lugar:
+        type: "string"
+paths:
+  /eventos:
+    get:
+      tags:
+        - "eventos"
+      summary: "Listado de eventos"
+      description: "Retorna lista de eventos con sus asistentes"
+      operationId: "meetup_app_connexion.controllers.listar_eventos"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Evento"
+    post:
+      tags:
+        - "eventos"
+      summary: "Crear un evento"
+      description: "Crear un evento"
+      operationId: "meetup_app_connexion.controllers.crear_evento"
+      parameters:
+      - in: "body"
+        name: "evento_in"
+        description: "nuevo evento"
+        required: true
+        schema:
+          $ref: "#/definitions/PeticionEvento"
+      responses:
+        200:
+          description: "operacion exitosa"
+          schema:
+            $ref: "#/definitions/Evento"
+  /eventos/{id_evento}:
+    get:
+      tags:
+        - "eventos"
+      summary: "Obtener Evento"
+      description: "Obtener Evento"
+      operationId: "meetup_app_connexion.controllers.obtener_evento"
+      parameters:
+        - in: "path"
+          name: "id_evento"
+          description: "Id del evento"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "operacion exitosa"
+          schema:
+            $ref: "#/definitions/Evento"
+    put:
+      tags:
+        - "eventos"
+      summary: "Actualizar Evento"
+      description: "Actualizar Evento"
+      operationId: "meetup_app_connexion.controllers.actualizar_evento"
+      parameters:
+        - in: "path"
+          name: "id_evento"
+          description: "Id del evento"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "evento_in"
+          description: "Evento a actualizar"
+          required: true
+          schema:
+            $ref: "#/definitions/PeticionEvento"
+      responses:
+        200:
+          description: "operacion exitosa"
+          schema:
+            $ref: "#/definitions/Evento"
+    delete:
+      tags:
+        - "eventos"
+      summary: "Eliminar Evento"
+      description: "Eliminar Evento"
+      operationId: "meetup_app_connexion.controllers.eliminar_evento"
+      parameters:
+        - in: "path"
+          name: "id_evento"
+          description: "Id del evento"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "operacion exitosa"
+          schema:
+            $ref: "#/definitions/Evento"
+  /eventos/{id_evento}/registrarse:
+    post:
+      tags:
+        - "eventos"
+        - "usuario"
+      summary: "Registrar usuario en evento"
+      description: "Registrar usuario en evento"
+      operationId: "meetup_app_connexion.controllers.unirse_a_evento"
+      parameters:
+        - in: "path"
+          name: "id_evento"
+          description: "Id del evento"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "operacion exitosa"
+  /eventos/{id_evento}/salirse:
+    post:
+      tags:
+        - "eventos"
+        - "usuario"
+      summary: "Sacar usuario en evento"
+      description: "Sacar usuario en evento"
+      operationId: "meetup_app_connexion.controllers.salirse_evento"
+      parameters:
+        - in: "path"
+          name: "id_evento"
+          description: "Id del evento"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "operacion exitosa"
+  /usuarios:
+    post:
+      tags:
+        - "usuario"
+      summary: "Crear un usuario"
+      description: "Crear un usuario"
+      operationId: "meetup_app_connexion.controllers.crear_usuario"
+      parameters:
+      - in: "body"
+        name: "usuario_in"
+        description: "nuevo usuario"
+        required: true
+        schema:
+          $ref: "#/definitions/PeticionUsuario"
+      responses:
+        200:
+          description: "operacion exitosa"
+          schema:
+            $ref: "#/definitions/Usuario"
+        400:
+          description: "Invalid request"
