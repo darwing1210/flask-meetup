@@ -16,5 +16,8 @@ venv/
 # sqlite
 app.db
 
+# IPython notebook
+.ipynb_checkpoints
+
 # other
 presentation_notes.txt
